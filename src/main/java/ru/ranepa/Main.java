@@ -1,21 +1,40 @@
 package ru.ranepa;
 
 public class Main {
-
     public static void main(String[] args) {
-        Student student = Student.create("Иванов Иван");
-        student.getGrades().add(4);
-        student.getGrades().add(5);
-        System.out.println(student.average());
-        student.printReport();
+        University university = new University();
+        int studentCount = 3;
+        long ivanID = university.enroll("Иванов Иван");
+        long petrID = university.enroll("Петров Пётр");
+        long annaID = university.enroll("Смирнова Анна");
 
-        // TODO: создать университет
-        // TODO: зачислить 2–3 студентов и поставить оценки
-        // TODO: перевести студента со средним баллом больше 2.5
-        // TODO: перевести студента со средним баллом 2.5 или меньше
-        // TODO: перевести студента с 4 курса
-        // TODO: отчислить студента и показать отказ
-        // TODO: [вариант N] — выполнить свой кейс, строки начинать с [вариант N]
-        // TODO: напечатать сводку — в ней должна быть информация из кейса
+        university.addGrade(ivanID, 4);
+        university.addGrade(ivanID, 5);
+        university.addGrade(petrID, 2);
+        university.addGrade(petrID, 3);
+        university.addGrade(annaID, 4);
+        System.out.println("Перевод со средним баллом больше 2.5:");
+        university.transferToNextCourse(ivanID);
+
+        System.out.println("Перевод со средним баллом ровно 2.5:");
+        university.transferToNextCourse(petrID);
+
+        System.out.println("Перевод на 3 и 4 курсы и выпуск:");
+        university.transferToNextCourse(ivanID);
+        university.transferToNextCourse(ivanID);
+        university.transferToNextCourse(ivanID);
+
+        System.out.println("Отчисление и попытка поставить оценку:");
+        university.expel(annaID);
+        try {
+            university.addGrade(annaID, 5);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Отказ: " + e.getMessage());
+        }
+
+        System.out.println("Повторное зачисление создаёт нового студента:");
+        long newAnnaID = university.enroll("Смирнова Анна");
+        university.addGrade(newAnnaID, 5);
+        university.printSummary();
     }
 }
